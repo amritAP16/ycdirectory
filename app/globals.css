@@ -76,8 +76,8 @@
   .pattern {
     background-image: linear-gradient(to right,
         transparent 49.5%,
-        rgba(251, 232, 67, 0.2) 49.5%,
-        rgba(251, 232, 67, 0.6) 50.5%,
+        rgba(241, 241, 233, 0.2) 49.5%,
+        rgba(243, 242, 238, 0.6) 50.5%,
         transparent 50.5%);
     background-size: 5% 100%;
     background-position: center;
@@ -236,6 +236,48 @@
     border-radius: 22px;
     background-color: #a1a1aa; /* bg-zinc-400 in Tailwind is #a1a1aa */
   }
+  
+  .tag {
+  background-color: #fbe843;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 700;
+  border-radius: 0.125rem;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.tag-tri::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  border-top: 10px solid black;
+  border-right: 10px solid transparent;
+}
+
+.tag-tri::after {
+  content: '';
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  border-bottom: 10px solid black;
+  border-left: 10px solid transparent;
+}
+
+.category-tag {
+  font-weight: 500;
+  font-size: 16px; 
+  background-color: var(--color-primary-100);
+  padding-left: 1rem;  
+  padding-right: 1rem;
+  padding-top: 0.5rem; 
+  padding-bottom: 0.5rem;
+  border-radius: 9999px; 
+}
 
   body {
     background-color: white;
