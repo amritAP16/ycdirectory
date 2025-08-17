@@ -2,6 +2,7 @@ import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
 import SearchForm from "../../components/SearchForm";
 import { STARTUP_QUERY } from "@/sanity/lib/queries";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
+import { auth } from "@/auth"
 
 export default async function Home({
   searchParams,
@@ -11,11 +12,14 @@ export default async function Home({
   const query = (await searchParams).query;
   const params = { search: query || null };
 
+const session = await auth(); 
+  console.log(session?.user?.id);
+
   const { data: posts } = await sanityFetch({ query: STARTUP_QUERY, params });
 
   return (
     <>
-      <section className="pink_container pattern">
+      <section className="pink_container pattern !min-h-[230px]">
         <p className="tag tag-tri">Pitch Your StartUp</p>
         <h1 className="heading">
           Pitch your startup,connect with enterpreneurs
