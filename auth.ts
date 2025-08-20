@@ -40,10 +40,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await client
           .withConfig({ useCdn: false })
           .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id: ghProfile.id });
-          console.log(user)
+          
 
         token.id = user?._id || ghProfile.id || token.sub;
-        console.log(token.id)
+        
       }
       return token;
     },
@@ -51,8 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         (session.user as any).id = token.id;
       }
-      console.log(session)
-      console.log(token)
+
       return session;
     },
   },

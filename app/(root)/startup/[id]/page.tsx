@@ -1,6 +1,6 @@
 import { formatDate } from "@/lib/utils";
 import { client } from "@/sanity/lib/client";
-import { PLAYLIST_BY_SLUG_QUERY, STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
+import { AUTHOR_BY_ID_QUERY, PLAYLIST_BY_SLUG_QUERY, STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import View from "@/components/View";
 import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
+import { auth } from "@/auth";
 
 
 const md = markdownit()
@@ -17,13 +18,17 @@ export const experimental_ppr = true;
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
+  const session = await auth();
 
-  const [post, {select: editorPosts }] = await Promise.all([
+  const [post, playlist, user] = await Promise.all([
     client.fetch(STARTUP_BY_ID_QUERY, { id }),
-    client.fetch(PLAYLIST_BY_SLUG_QUERY, {slug: 'editors-pick'})
+    client.fetch(PLAYLIST_BY_SLUG_QUERY, {slug: 'editors-pick'}),
+    client.fetch(AUTHOR_BY_ID_QUERY, { id : session.user.id }),
   ])
+  console.log("user:" , user)
 
   if (!post) return notFound();
+  const editorPosts = playlist?.select ?? [];
 
   const parsedContent = md.render(post?.pitch || "");
 
@@ -38,7 +43,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <section className="section_container">
         <img
           src={post.image}
-          alt="thumnail"
+          alt="thumbnail"
           className="w-full h-auto rounded-2xl"
         />
 
@@ -49,18 +54,18 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               className="flex gap-2 items-center mb-3"
             >
               <Image
-                src={post.author.image}
+                src={user.image}
                 alt="avatar"
                 width={58}
                 height={58}
                 className="rounded-full drop-shadow-lg"
               />
               <div>
-                <p className="text-20 font-medium">{post.author.name}</p>
-                <p className="text-16 font-medium !text-gray-500">@{post.author.username}</p>
+                <p className="text-20 font-medium">{user.name}</p>
+                <p className="text-16 font-medium !text-gray-500">@{user.username}</p>
               </div>
             </Link>
-            <div className="w-40 h-15 flex items-center mt-5 "><p className="category-tag" >{post.category}</p></div>
+            <div className="w-40 h-15 flex items-center mt-5 "><p className="category-tag" >{post?.category}</p></div>
           </div>
           <h3 className="text-3xl font-extrabold">Pitch Details</h3>
             {parsedContent ? (

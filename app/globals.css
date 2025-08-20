@@ -281,8 +281,8 @@
 
 .no-result{
   color: black;
-  font-size: small;
-  font-weight: normal;
+  font-size: medium;
+  font-weight: 400;
 }
 
   .divider {

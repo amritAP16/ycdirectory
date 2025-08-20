@@ -9,14 +9,15 @@ import { Suspense } from "react";
 
 export const experimental_ppr = true;
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const id = (await params).id;
+const page = async ( { params }: { params: Promise<{ id: string }>  }) => {
+
+  const { id } = await params;
+
   const session = await auth();
-
-  const user = await client.fetch(AUTHOR_BY_ID_QUERY, { id });
-  console.log(user)
-
-  // if(!user) return notFound()
+ 
+  const user = await client.fetch(AUTHOR_BY_ID_QUERY, { id : session.user.id });
+  console.log("user :", user)
+  if(!user) return notFound()
 
   return (
     <>
@@ -24,20 +25,20 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="profile_card">
           <div className="profile_title">
             <h3 className="text-2xl font-bold text-black uppercase text-center line-clamp-1">
-              Amrit Pandey
+              {user?.name}
             </h3>
           </div>
           <Image
-            src="https://i.pinimg.com/474x/bf/f0/1d/bff01dd0ae186d938f1af8ba127f12bd.jpg"
+            src= {user?.image}                   
             alt="Luffy"
             width={220}
             height={220}
             className="profile_image"
           />
           <p className="text-white text-30 font-extrabold mt-7 text-center">
-            @amritAP16
+            @{user?.username}
           </p>
-          <p className="mt-1 text-white text-center font-medium ">Full Stack Developer</p>
+          <p className="mt-1 text-white text-center font-medium ">{user?.bio}</p>
         </div>
 
         <div className="flex-1 flex flex-col gap-5 lg:-mt-5"> 
